@@ -1,0 +1,6 @@
+N = int(input())
+A = list(input().split())
+B = list(input().split())
+a = "".join(A)
+b = "".join(B)
+print(min(int(a), int(b)))
