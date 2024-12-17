@@ -1,0 +1,5 @@
+N, K = map(int, input().split())
+A = list(map(int, input().split()))
+A.sort()
+R = sum(A[N-K:N]) - (K*(K-1)//2)
+print(R)
