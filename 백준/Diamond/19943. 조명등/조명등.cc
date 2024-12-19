@@ -75,7 +75,7 @@ void solv(){
     for(int i=0;i<N;i++){
         ll x = b[i].xx + b[i].yy;
         ll v = (b[i+1].yy - b[i+1].xx);
-        ll X = CHT.binary_query(x);
+        ll X = CHT.query(x);
         dp[i] = min(dp[i], X + x*x);
         CHT.insert_back({2 * v, dp[i] + v * v});
     }
