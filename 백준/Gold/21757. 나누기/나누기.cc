@@ -23,7 +23,7 @@ int main(){
     }else if(ps[n] == 0){
         ll k = 0;
         for(int i=1;i<=n;i++) if(!ps[i]) k++;
-        cout << k * (k-1) * (k-2) / 6;
+        cout << (k-1) * (k-2) * (k-3) / 6;
     }else{
         vector dp(n+1, vector<ll>(4));
         ll bkt = ps[n] / 4;
