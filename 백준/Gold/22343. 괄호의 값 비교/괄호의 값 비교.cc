@@ -11,11 +11,11 @@ typedef tuple<ll, ll, ll> tlll;
 
 char f(vector<int> &a, vector<int> &b){
     int sz = a.size();
-    for(int i=0;i<30;i++){
-        a[i+1] += a[i] / (1<<i);
-        a[i] %= (1<<i);
-        b[i+1] += b[i] / (1<<i);
-        b[i] %= (1<<i);
+    for(int i=0;i<sz;i++){
+        a[i+1] += a[i] / 2;
+        a[i] %= 2;
+        b[i+1] += b[i] / 2;
+        b[i] %= 2;
     }
     while(!a.empty()){
         if(a.back() != b.back()){
@@ -32,7 +32,8 @@ void solv(){
     string s, t;
     cin >> s >> t;
     int n = s.length(), m = t.length();
-    vector<int> ps1(n + 1), ps2(m + 1), coe1(1500001, 0), coe2(1500001, 0);
+    const int MAX = 1500001;
+    vector<int> ps1(n + 1), ps2(m + 1), coe1(MAX, 0), coe2(MAX, 0);
     for(int i=0;i<n;i++){
         ps1[i+1] = ps1[i] + (s[i] == '(' ? 1 : -1);
     }
@@ -41,12 +42,12 @@ void solv(){
     }
     for(int i=1;i<n;i++){
         if(s[i-1]=='(' && s[i] == ')'){
-            coe1[ps1[i]]++;
+            coe1[ps1[i+1]]++;
         }
     }
     for(int i=1;i<m;i++){
         if(t[i-1]=='(' && t[i] == ')'){
-            coe2[ps2[i]]++;
+            coe2[ps2[i+1]]++;
         }
     }
 
