@@ -10,14 +10,10 @@ for i in range(N) :
         R += 1
         V[dq.popleft()] = 1
         V[i] = 1
-T = ""
-for i in range(N) : 
-    if not V[i] : T += S[i]
-M = len(T)
 dq.clear()
-for i in range(M) : 
-    if T[i] == 'A' : dq.append(i)
-    elif T[i] == 'B' and dq: 
+for i in range(N) : 
+    if S[i] == 'A' : dq.append(i)
+    elif S[i] == 'B' and dq: 
         R += 1
         dq.popleft()
-print(R)
+print(min(R, S.count("B")))
