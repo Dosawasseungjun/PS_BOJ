@@ -30,27 +30,19 @@ int main(){
         A[i] = Node(s, e, n);
     }
     sort(A.begin(), A.end());
-    queue<Node> q;
+    vector<int> P(N+1);
     int res = 0;
     int nc = 0, idx = 0;
-    for(int v=1;v<=N;v++){
-        // 짐 내리기
-        while(!q.empty() && q.front().ed <= v){
-            res += q.front().n;
-            nc -= q.front().n;
-            q.pop();
+    for(int i=0;i<M;i++){
+        int mx = 0;
+        for(int j=A[i].st;j<A[i].ed;j++){
+            mx = max(mx, P[j]);
         }
-        // 짐 올리기
-        for(int i=idx;i<M;i++){
-            if(A[i].st < v) continue;
-            if(nc < C){
-                int k = min(C-nc, A[i].n);
-                idx = i;
-                A[i].n -= k;
-                nc += k;
-                q.push(Node(A[i].st, A[i].ed, k));
-            }else break;
+        int k = min(A[i].n, C - mx);
+        for(int j=A[i].st;j<A[i].ed;j++){
+            P[j] += k;
         }
+        res += k;
     }
     cout << res;
 }
