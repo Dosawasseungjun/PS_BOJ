@@ -39,6 +39,7 @@ int main(){
             auto [now, now_cost, now_dist] = pq.top();
             pq.pop();
             
+            if(dp[now][now_cost] < now_dist) continue;
             for(auto [nxt, w] : G[now]){
                 ll mn_cost = min(C[nxt], now_cost);
                 if(dp[nxt][mn_cost] >  w * now_cost + now_dist){
