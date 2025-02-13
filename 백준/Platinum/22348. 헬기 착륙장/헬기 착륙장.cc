@@ -41,6 +41,7 @@ int main(){
             ll ra = a;
             if(la > ra) continue;
             res += ps[r][ra] - (la ? ps[r][la-1] : 0);
+            res = (res % MOD + MOD) % MOD;
         }
         cout << res <<'\n';
     }
