@@ -17,50 +17,50 @@ int main(){
     }
     vector notebook = vector(N, vector<int>(M, 0));
 
-    function<vector<vector<int>>(vector<vector<int>>&)> rotate_sticker = [&](vector<vector<int>> &S){
+    function<void(vector<vector<int>>&)> rotate_sticker = [&](vector<vector<int>> &S){
         int r = S.size();
         int c = S[0].size();
-        vector ns = vector(c, vector<int>(r));
+        vector ns = vector(c, vector<int>(r, 0));
         for(int i=0;i<c;i++){
             for(int j=0;j<r;j++){
                 ns[i][j] = S[r-1-j][i];
             }
         }
-        return ns;
+        S = ns;
     };
 
-    function<vector<vector<int>>(int, int, vector<vector<int>>&, int&)> can_attach = [&](int y, int x, vector<vector<int>> &S, int& flag){
+    function<void(int, int, vector<vector<int>>&, int&)> can_attach = [&](int y, int x, vector<vector<int>> &S, int& flag){
         int r = S.size();
         int c = S[0].size();
         vector<vector<int>> tmp_notebook = notebook;
         for(int i=y;i<y+r;i++){
             for(int j=x;j<x+c;j++){
                 if(S[i-y][j-x] && tmp_notebook[i][j]){
-                    return notebook;
+                    return ;
                 }else if(S[i-y][j-x]){
                     tmp_notebook[i][j] = 1;
                 }
             }
         }
         flag = 1;
-        return tmp_notebook;
+        notebook = tmp_notebook;
     };
 
     for(int k=0;k<K;k++){
         int is_attach = 0;
         vector<vector<int>> ns = stickers[k];
         for(int t=0;t<4;t++){
-            if(t) ns = rotate_sticker(ns);
             int r = ns.size();
             int c = ns[0].size();
             for(int i=0;i+r<=N;i++){
                 for(int j=0;j+c<=M;j++){
-                    notebook = can_attach(i, j, ns, is_attach);
+                    can_attach(i, j, ns, is_attach);
                     if(is_attach) break;
                 }
                 if(is_attach) break;
             }
             if(is_attach) break;
+            rotate_sticker(ns);
         }
     }
     int res = 0;
