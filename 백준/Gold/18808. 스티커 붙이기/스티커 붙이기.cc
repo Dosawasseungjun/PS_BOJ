@@ -29,37 +29,39 @@ int main(){
         S = ns;
     };
 
-    function<void(int, int, vector<vector<int>>&, int&)> can_attach = [&](int y, int x, vector<vector<int>> &S, int& flag){
+    function<bool(vector<vector<int>>&)> can_attach = [&](vector<vector<int>> &S){
         int r = S.size();
         int c = S[0].size();
-        vector<vector<int>> tmp_notebook = notebook;
-        for(int i=y;i<y+r;i++){
-            for(int j=x;j<x+c;j++){
-                if(S[i-y][j-x] && tmp_notebook[i][j]){
-                    return ;
-                }else if(S[i-y][j-x]){
-                    tmp_notebook[i][j] = 1;
+        for(int p=0;p+r<=N;p++){
+            for(int q=0;q+c<=M;q++){
+                bool can = true;
+                for(int i=p;i<p+r;i++){
+                    for(int j=q;j<q+c;j++){
+                        if(S[i-p][j-q] && notebook[i][j]){
+                            can = false;
+                            goto label;
+                        }
+                    }
                 }
+                label : 
+                if(can){
+                    for(int i=p;i<p+r;i++){
+                        for(int j=q;j<q+c;j++) notebook[i][j] += S[i-p][j-q];
+                    }
+                    return true;
+                }
+                 
             }
         }
-        flag = 1;
-        notebook = tmp_notebook;
+        
+        return false;
     };
 
     for(int k=0;k<K;k++){
         int is_attach = 0;
         vector<vector<int>> ns = stickers[k];
         for(int t=0;t<4;t++){
-            int r = ns.size();
-            int c = ns[0].size();
-            for(int i=0;i+r<=N;i++){
-                for(int j=0;j+c<=M;j++){
-                    can_attach(i, j, ns, is_attach);
-                    if(is_attach) break;
-                }
-                if(is_attach) break;
-            }
-            if(is_attach) break;
+            if(can_attach(ns)) break;
             rotate_sticker(ns);
         }
     }
