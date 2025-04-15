@@ -14,6 +14,10 @@ const int mod = 1e9+7;
 int dx[] = {0, 0, -1, 1};
 int dy[] = {1, -1, 0, 0};
 
+int D[(1 << 9)][(1 << 9)][(1 << 8)];
+bool vst[(1 << 9)][(1 << 9)][(1 << 8)];
+bool O[(1 << 9)][(1 << 9)];
+
 
 int main(){
     fast_io
@@ -26,9 +30,6 @@ int main(){
     x += DX; y += DY; 
     hx += DX; hy += DY; 
 
-    vector D = vector(201, vector(401, vector<ll>(401, 0)));
-    vector vst = vector(201, vector(401, vector<bool>(401, 0)));
-    vector O = vector(401, vector<bool>(401, 0));
     for(int i=0;i<N;i++){
         int ox, oy;
         cin >> ox >> oy;
@@ -48,8 +49,8 @@ int main(){
 
     vector<pii> cand;
     cand.push_back({x, y});
-    D[0][x][y] = 1;
-    for(int i=0;i<=T;i++) vst[i][hx][hy] = 1; // 집에서 다시 출발하는 경우는 없음...;;
+    D[x][y][0] = 1;
+    for(int i=0;i<=T;i++) vst[hx][hy][i] = 1; // 집에서 다시 출발하는 경우는 없음...;;
     for(int i=1;i<=T;i++){
         vector<pii> new_cand;
         for(auto [cx, cy] : cand){
@@ -58,19 +59,19 @@ int main(){
                 int nxt_y = cy + dy[j];
 
                 if(nxt_x >= 0 && nxt_x <= 400 && nxt_y >= 0 && nxt_y <= 400 && !O[nxt_x][nxt_y]){
-                    if(!vst[i][nxt_x][nxt_y]){
-                        vst[i][nxt_x][nxt_y] = 1;
+                    if(!vst[nxt_x][nxt_y][i]){
+                        vst[nxt_x][nxt_y][i] = 1;
                         new_cand.push_back({nxt_x, nxt_y});
                     }
-                    D[i][nxt_x][nxt_y] = (D[i][nxt_x][nxt_y] + D[i - 1][cx][cy]) % mod;
+                    D[nxt_x][nxt_y][i] = (D[nxt_x][nxt_y][i] + D[cx][cy][i-1]) % mod;
                 }
             }
         }
         cand = new_cand;
     }
-    ll ans = 0;
+    int ans = 0;
     for(int i=0;i<=T;i++){
-        ans += D[i][hx][hy];
+        ans += D[hx][hy][i];
         ans %= mod;
     }
     cout << ans;
