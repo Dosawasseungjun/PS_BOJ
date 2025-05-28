@@ -1,0 +1,1 @@
+print("Soomin" if int(input()) &1 else "Song")
