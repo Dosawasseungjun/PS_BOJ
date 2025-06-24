@@ -51,7 +51,13 @@ int main(){
                         break;
                     }
                 }
-            }else i++;
+            }else{
+                if(i == s.length()){
+                    break;
+                }
+                ok = false;
+                break;
+            }
         }else{
             ok = false;
             break;
