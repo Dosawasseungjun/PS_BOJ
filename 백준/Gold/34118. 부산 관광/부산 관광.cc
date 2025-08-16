@@ -18,25 +18,52 @@ int main(){
     cin >> a >> b;
     a = "0" + a;
     b = "0" + b;
-    int p[4];
-    cin >> p[0] >> p[1] >> p[2] >> p[3];
-    vector dp = vector(n+1, vector<int>(n+1, inf));
+    int p[5];
+    int q[] = {0, 1, 3, 5, 4};
+    p[0] = 0;
+    cin >> p[1] >> p[2] >> p[3] >> p[4];
+    vector dp = vector(6, vector(6, vector<int>(5, inf)));
+    // dp[i][j][k] : 한국이는 개인티켓이 i일 남았고, 정올이는 j일 남았고, 묶음권은 k일 남았을 때 최소비용
     
-    function<int(int, int)> f = [&](int i, int j){
-        if(i < 0 || j < 0) return inf;
-        if(!i && !j) return 0;
-        int &ret = dp[i][j];
-        if(ret != inf) return ret;
-        if(a[i] == '0') ret = min(ret, f(i-1, j));
-        if(b[j] == '0') ret = min(ret, f(i, j-1));
-        for(int k1=1;k1<=5;k1+=2){
-            if(i >= k1) ret = min(ret, f(i-k1, j) + p[k1/2]);
+    dp[0][0][0] = 0;
+    for(int t=1;t<=n;t++){
+        vector ndp = vector(6, vector(6, vector<int>(5, inf)));
+        for(int i=0;i<=5;i++){
+            for(int j=0;j<=5;j++){
+                for(int k=0;k<=4;k++){
+                    if(dp[i][j][k] != inf){
+                        int ri = max(0, i-1);
+                        int rj = max(0, j-1);
+                        int rk = max(0, k-1);
+                        
+                        for(int x=0;x<4;x++){
+                            for(int y=0;y<4;y++){
+                                int ni = max(ri, q[x]);
+                                int nj = max(rj, q[y]);
+                                int nk = rk;
+
+                                if((ni >= (a[t] - '0') && nj >= (b[t] - '0')) || nk) {
+                                    ndp[ni][nj][nk] = min(ndp[ni][nj][nk], dp[i][j][k] + p[x] + p[y]);
+                                }
+                            }
+                        }
+
+                        ndp[ri][rj][4] = min(ndp[ri][rj][4], dp[i][j][k] + p[4]);
+                    }
+                }
+            }
         }
-        for(int k2=1;k2<=5;k2+=2){
-            if(j >= k2) ret = min(ret, f(i, j-k2) + p[k2/2]);
+
+        dp.swap(ndp);
+    }
+
+    int res = inf;
+    for(int i=0;i<=5;i++){
+        for(int j=0;j<=5;j++){
+            for(int k=0;k<=4;k++){
+                res = min(res, dp[i][j][k]);
+            }
         }
-        if(i >= 4 && j >= 4) ret = min(ret, f(i-4, j-4) + p[3]);
-        return ret;
-    };
-    cout << f(n, n);
+    }
+    cout << res;
 }
